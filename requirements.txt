@@ -1,0 +1,6 @@
+pandas~=1.1.5
+numpy~=1.19.4
+fbprophet~=0.7.1
+google~=3.0.0
+streamlit~=0.71.0
+plotly~=4.14.0
