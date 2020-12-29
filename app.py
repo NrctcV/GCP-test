@@ -18,7 +18,7 @@ import plotly.graph_objs as go
 # from fbprophet.serialize import model_from_json # model_to_json
 
 
-storage_client = storage.Client.from_service_account_json('https://github.com/NrctcV/GCP-test/blob/main/axiom-297712-863b16ff55de.json')
+storage_client = storage.Client.from_service_account_json('https://github.com/NrctcV/GCP-test/main/axiom-297712-863b16ff55de.json')
 
 #@st.cache(allow_output_mutation=True)  # This function will be cached
 def dataset(n):
