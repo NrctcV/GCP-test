@@ -24,7 +24,7 @@ def dataset(n):
     df_init = pd.read_csv('gs://metricsss/installs.csv')
     #df_init['Date'] = pd.to_datetime(df_init['Date'])
     #df_init = df_init[['Date','Volume']]
-    df_init['ds'] = df_init['ds'].dt.strftime('%Y-%m-%d')
+    #df_init['ds'] = df_init['ds'].dt.strftime('%Y-%m-%d')
     #df_init = df_init.rename(columns={'Date': 'ds', 'Volume': 'y'})
     df_init.drop(df_init.tail(n).index, inplace=True)
     return df_init
