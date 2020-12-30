@@ -17,7 +17,7 @@ import plotly.graph_objs as go
 # import json
 # from fbprophet.serialize import model_from_json # model_to_json
 
-storage_client = storage.Client.from_service_account_json('gs://metricss/axiom-297712-863b16ff55de.json')
+# storage_client = storage.Client.from_service_account_json('gs://metricss/axiom-297712-863b16ff55de.json')
 
 #@st.cache(allow_output_mutation=True)  # This function will be cached
 def dataset(n):
@@ -80,7 +80,7 @@ def anomaly(data_new, forecast_old):
     df_merged["Actual value"] = df_merged["Actual value"].fillna("0").astype(int)
 
     df_merged.to_csv('forecast_merged.csv')
-    storage_client.get_bucket('metrics-first').blob('forecast_merged.csv').upload_from_filename(
+    storage_client.get_bucket('metricsss').blob('forecast_merged.csv').upload_from_filename(
         'forecast_merged.csv',
         content_type='text/csv')
     return df_merged
@@ -102,12 +102,12 @@ def color_survived(val):
 
 def main():
 
-    if not os.path.exists('gs://metricss/forecast.csv'):
+    if not os.path.exists('gs://metricsss/forecast.csv'):
         data_first = dataset(1)
         forecast_for_today = prediction(data_first)[0]
         #gstorage
         forecast_for_today.to_csv('forecast.csv')
-        storage_client.get_bucket('metrics-first').blob('forecast.csv').upload_from_filename('forecast.csv',
+        storage_client.get_bucket('metricsss').blob('forecast.csv').upload_from_filename('forecast.csv',
                                                                                  content_type='text/csv')
         main()
     else:
@@ -115,7 +115,7 @@ def main():
         #daily_iterations
         data_new = dataset(0)
         #gstorage
-        forecast_for_today = pd.read_csv('gs://metricss/forecast.csv')
+        forecast_for_today = pd.read_csv('gs://metricsss/forecast.csv')
         forecast_for_tomorrow = prediction(data_new)[0]
         #Safe update
         last_date1 = forecast_for_today['ds'].iloc[-1]
@@ -123,18 +123,18 @@ def main():
         if last_date1 != last_date2:
             # gstorage
             forecast_for_tomorrow.to_csv('forecast.csv')
-            storage_client.get_bucket('metricss').blob('forecast.csv').upload_from_filename(
+            storage_client.get_bucket('metricsss').blob('forecast.csv').upload_from_filename(
                 'forecast.csv',
                 content_type='text/csv')
             # gstorage
             forecast_for_today.to_csv('forecast_for_spammers.csv')
-            storage_client.get_bucket('metricss').blob('forecast_for_spammers.csv').upload_from_filename(
+            storage_client.get_bucket('metricsss').blob('forecast_for_spammers.csv').upload_from_filename(
                 'forecast_for_spammers.csv',
                 content_type='text/csv')
         else:
             st.text('No new updates')
             # gstorage
-            forecast_for_today = pd.read_csv('gs://metricss/forecast_for_spammers.csv')
+            forecast_for_today = pd.read_csv('gs://metricsss/forecast_for_spammers.csv')
 
 
         # output
