@@ -17,12 +17,7 @@ import plotly.graph_objs as go
 # import json
 # from fbprophet.serialize import model_from_json # model_to_json
 
-import urllib.request, json 
-with urllib.request.urlopen("https://github.com/NrctcV/GCP-test/main/axiom-297712-863b16ff55de.json") as url:
-    data = json.loads(url.read().decode())
-    
-    
-storage_client = storage.Client.from_service_account_json(data)
+storage_client = storage.Client.from_service_account_json('gs://metricss/axiom-297712-863b16ff55de.json')
 
 #@st.cache(allow_output_mutation=True)  # This function will be cached
 def dataset(n):
@@ -107,7 +102,7 @@ def color_survived(val):
 
 def main():
 
-    if not os.path.exists('/Users/user/PycharmProjects/web_app_playground/forecast.csv'):
+    if not os.path.exists('gs://metricss/forecast.csv'):
         data_first = dataset(1)
         forecast_for_today = prediction(data_first)[0]
         #gstorage
@@ -120,7 +115,7 @@ def main():
         #daily_iterations
         data_new = dataset(0)
         #gstorage
-        forecast_for_today = pd.read_csv('gs://metrics-first/forecast.csv')
+        forecast_for_today = pd.read_csv('gs://metricss/forecast.csv')
         forecast_for_tomorrow = prediction(data_new)[0]
         #Safe update
         last_date1 = forecast_for_today['ds'].iloc[-1]
@@ -128,18 +123,18 @@ def main():
         if last_date1 != last_date2:
             # gstorage
             forecast_for_tomorrow.to_csv('forecast.csv')
-            storage_client.get_bucket('metrics-first').blob('forecast.csv').upload_from_filename(
+            storage_client.get_bucket('metricss').blob('forecast.csv').upload_from_filename(
                 'forecast.csv',
                 content_type='text/csv')
             # gstorage
             forecast_for_today.to_csv('forecast_for_spammers.csv')
-            storage_client.get_bucket('metrics-first').blob('forecast_for_spammers.csv').upload_from_filename(
+            storage_client.get_bucket('metricss').blob('forecast_for_spammers.csv').upload_from_filename(
                 'forecast_for_spammers.csv',
                 content_type='text/csv')
         else:
             st.text('No new updates')
             # gstorage
-            forecast_for_today = pd.read_csv('gs://metrics-first/forecast_for_spammers.csv')
+            forecast_for_today = pd.read_csv('gs://metricss/forecast_for_spammers.csv')
 
 
         # output
