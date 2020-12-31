@@ -51,7 +51,7 @@ def prediction(dataset):
     """
     #with open('serialized_model.json', 'r') as fin:
     #   model = model_from_json(json.load(fin))  # Load model
-    model = Prophet()
+    model = Prophet(daily_seasonality=True, yearly_seasonality=True)
     model.fit(dataset)
     future = model.make_future_dataframe(periods=7, freq='d')
     forecast = model.predict(future)
@@ -110,7 +110,7 @@ def main():
         #gstorage
         forecast_for_today.to_csv('forecast.csv')
         storage_client.get_bucket('metricsss').blob('forecast.csv').upload_from_filename('forecast.csv')
-        main()
+        #main()
     else:
 
 
