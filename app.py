@@ -15,6 +15,7 @@ import os
 import plotly.graph_objs as go
 #fsspec
 #gcsfs
+import dask.dataframe as dd
 
 storage_client = storage.Client()
 
@@ -37,7 +38,7 @@ def dataset(n):
 
     df_init = pandas_gbq.read_gbq(sql_query, project_id=project_id)
     df_init['ds'] = df_init['ds'].dt.strftime('%Y-%m-%d')'''
-    df_init = pd.read_csv('gs://metricsss/installs.csv')
+    df_init = dd.read_csv('gs://metricsss/installs.csv')
     df_init.drop(df_init.tail(n).index, inplace=True)
     return df_init
 
@@ -110,14 +111,14 @@ def main():
         #gstorage
         forecast_for_today.to_csv('forecast.csv')
         storage_client.get_bucket('metricsss').blob('forecast.csv').upload_from_filename('forecast.csv')
-        #main()
+        main()
     else:
 
 
         #daily_iterations
         data_new = dataset(0)
         #gstorage
-        forecast_for_today = pd.read_csv('gs://metricsss/forecast.csv')
+        forecast_for_today = dd.read_csv('gs://metricsss/forecast.csv')
         forecast_for_tomorrow = prediction(data_new)[0]
         #Safe update
         last_date1 = forecast_for_today['ds'].iloc[-1]
@@ -134,7 +135,7 @@ def main():
         else:
             st.text('No new updates')
             # gstorage
-            forecast_for_today = pd.read_csv('gs://metricsss/forecast_for_spammers.csv')
+            forecast_for_today = dd.read_csv('gs://metricsss/forecast_for_spammers.csv')
 
 
         # output
