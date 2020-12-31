@@ -37,7 +37,7 @@ def dataset(n):
 
     df_init = pandas_gbq.read_gbq(sql_query, project_id=project_id)
     df_init['ds'] = df_init['ds'].dt.strftime('%Y-%m-%d')'''
-    df_init = pd.read_csv('gs://metricsss/forecast.csv')
+    df_init = pd.read_csv('gs://metricsss/installs.csv')
     df_init.drop(df_init.tail(n).index, inplace=True)
     return df_init
 
