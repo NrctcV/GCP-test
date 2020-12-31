@@ -84,8 +84,7 @@ def anomaly(data_new, forecast_old):
 
     df_merged.to_csv('forecast_merged.csv')
     storage_client.get_bucket('metricsss').blob('forecast_merged.csv').upload_from_filename(
-        'forecast_merged.csv',
-        content_type='text/csv')
+        'forecast_merged.csv')
     return df_merged
 
 
@@ -110,8 +109,7 @@ def main():
         forecast_for_today = prediction(data_first)[0]
         #gstorage
         forecast_for_today.to_csv('forecast.csv')
-        storage_client.get_bucket('metricsss').blob('forecast.csv').upload_from_filename('forecast.csv',
-                                                                                 content_type='text/csv')
+        storage_client.get_bucket('metricsss').blob('forecast.csv').upload_from_filename('forecast.csv')
         main()
     else:
 
@@ -127,12 +125,11 @@ def main():
             # gstorage
             forecast_for_tomorrow.to_csv('forecast.csv')
             storage_client.get_bucket('metricsss').blob('forecast.csv').upload_from_filename(
-                'forecast.csv', content_type='text/csv')
+                'forecast.csv')
             # gstorage
             forecast_for_today.to_csv('forecast_for_spammers.csv')
             storage_client.get_bucket('metricsss').blob('forecast_for_spammers.csv').upload_from_filename(
-                'forecast_for_spammers.csv',
-                content_type='text/csv')
+                'forecast_for_spammers.csv')
         else:
             st.text('No new updates')
             # gstorage
