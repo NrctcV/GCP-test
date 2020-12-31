@@ -110,6 +110,8 @@ def main():
         #gstorage
         forecast_for_today.to_csv('forecast.csv')
         storage_client.get_bucket('metricsss').blob('forecast.csv').upload_from_filename('forecast.csv')
+        print('momo')
+    else:
         print('heyo')
         '''main()
     else:
