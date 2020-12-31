@@ -13,15 +13,18 @@ from fbprophet import Prophet
 from datetime import date
 import os
 import plotly.graph_objs as go
-
+#fsspec
+#gcsfs
 
 storage_client = storage.Client()
 
 #@st.cache(allow_output_mutation=True)  # This function will be cached
 def dataset(n):
+
     """
     Connection to Google BigQuery
     """
+    '''
     credentials = google.oauth2.credentials.Credentials(
         'a29.A0AfH6SMDgL2ePU-NjQI4XsY56JNkG4HmGCTyu4qS4375bo9TyvPNxg9RebXmEThDbLwSzuUO1N1_dS5LJ8MTGWRmiPzzyyOp7v3sESmGtwVM70PYcj-kgMZ3-H2zPTB1NMd0-yCK9wpdSS1djIDRa4o7xW7RzqExZmgGrF2sSweQ')
     project_id = "al-bi-bq-prod"
@@ -33,7 +36,8 @@ def dataset(n):
         order by 1"""
 
     df_init = pandas_gbq.read_gbq(sql_query, project_id=project_id)
-    df_init['ds'] = df_init['ds'].dt.strftime('%Y-%m-%d')
+    df_init['ds'] = df_init['ds'].dt.strftime('%Y-%m-%d')'''
+    df_init = pd.read_csv('gs://metricsss/forecast.csv')
     df_init.drop(df_init.tail(n).index, inplace=True)
     return df_init
 
