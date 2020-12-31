@@ -2,7 +2,7 @@
 Launch app with `streamlit run main.py --server.port 8000`.
 """
 
-
+import cloudstorage as gcs
 from google.cloud import storage
 import google.oauth2.credentials
 import pandas_gbq
@@ -17,6 +17,15 @@ import plotly.graph_objs as go
 #gcsfs
 
 storage_client = storage.Client()
+
+def is_exist(bucket_name,object):
+
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.get_blob(object)
+    try:
+        return blob.exists(storage_client)
+    except:
+        return False
 
 #@st.cache(allow_output_mutation=True)  # This function will be cached
 def dataset(n):
@@ -104,17 +113,14 @@ def color_survived(val):
 
 def main():
 
-    if not os.path.exists('gs://metricsss/forecast.csv'):
+    if is_exist('metricsss','forecast.csv') == False:
+            #os.path.exists('gs://metricsss/forecast.csv'):
         data_first = dataset(1)
         forecast_for_today = prediction(data_first)[0]
         #gstorage
         forecast_for_today.to_csv('forecast.csv')
         storage_client.get_bucket('metricsss').blob('forecast.csv').upload_from_filename('forecast.csv')
-        momo = storage.Blob(bucket='metricsss', name='forecast').exists(storage_client)
-        print(momo)
-    else:
-        print('heyo')
-        '''main()
+        main()
     else:
 
 
@@ -151,7 +157,7 @@ def main():
         st.table(forecast_horizons(data_new, forecast_for_today)[2].style.applymap(color_survived, subset=['Anomaly?']))
         st.write('# Anomaly visual')
         st.plotly_chart(prediction(data_new)[2])
-'''
+
 
 
 
