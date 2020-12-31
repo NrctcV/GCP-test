@@ -104,13 +104,14 @@ def color_survived(val):
 
 def main():
 
-    if not storage.Blob(bucket='metricsss', name='forecast').exists(storage_client):#os.path.exists('gs://metricsss/forecast.csv'):
+    if not os.path.exists('gs://metricsss/forecast.csv'):
         data_first = dataset(1)
         forecast_for_today = prediction(data_first)[0]
         #gstorage
         forecast_for_today.to_csv('forecast.csv')
         storage_client.get_bucket('metricsss').blob('forecast.csv').upload_from_filename('forecast.csv')
-        print('momo')
+        momo = storage.Blob(bucket='metricsss', name='forecast').exists(storage_client)
+        print(momo)
     else:
         print('heyo')
         '''main()
