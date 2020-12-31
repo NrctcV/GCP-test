@@ -10,6 +10,7 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 from fbprophet import Prophet
+from datetime import date
 import os
 import plotly.graph_objs as go
 
@@ -21,14 +22,20 @@ def dataset(n):
     """
     Connection to Google BigQuery
     """
-    df_init = pd.read_csv('gs://metricsss/installs.csv')
-    #df_init['Date'] = pd.to_datetime(df_init['Date'])
-    #df_init = df_init[['Date','Volume']]
-    #df_init['ds'] = df_init['ds'].dt.strftime('%Y-%m-%d')
-    #df_init = df_init.rename(columns={'Date': 'ds', 'Volume': 'y'})
+    credentials = google.oauth2.credentials.Credentials(
+        'a29.A0AfH6SMDgL2ePU-NjQI4XsY56JNkG4HmGCTyu4qS4375bo9TyvPNxg9RebXmEThDbLwSzuUO1N1_dS5LJ8MTGWRmiPzzyyOp7v3sESmGtwVM70PYcj-kgMZ3-H2zPTB1NMd0-yCK9wpdSS1djIDRa4o7xW7RzqExZmgGrF2sSweQ')
+    project_id = "al-bi-bq-prod"
+    final_date = date.today()
+    sql_query = f"""
+        select date as ds, sum(total_installs) as y from `al-bi-bq-prod.dwh.fact_daily_stats`
+        where _partitiondate between '2020-11-01' and '{final_date}'
+        group by 1
+        order by 1"""
+
+    df_init = pandas_gbq.read_gbq(sql_query, project_id=project_id)
+    df_init['ds'] = df_init['ds'].dt.strftime('%Y-%m-%d')
     df_init.drop(df_init.tail(n).index, inplace=True)
     return df_init
-
 
 
 
@@ -116,8 +123,7 @@ def main():
             # gstorage
             forecast_for_tomorrow.to_csv('forecast.csv')
             storage_client.get_bucket('metricsss').blob('forecast.csv').upload_from_filename(
-                'forecast.csv',
-                content_type='text/csv')
+                'forecast.csv', content_type='text/csv')
             # gstorage
             forecast_for_today.to_csv('forecast_for_spammers.csv')
             storage_client.get_bucket('metricsss').blob('forecast_for_spammers.csv').upload_from_filename(
@@ -155,21 +161,6 @@ if __name__ == "__main__":
 # AWS chalice
 # test on datetime
 # separate model training from prediction: move it to a different function (with cross val and pickle, then load model)
-
-    '''
-    credentials = google.oauth2.credentials.Credentials(
-    'a29.A0AfH6SMDgL2ePU-NjQI4XsY56JNkG4HmGCTyu4qS4375bo9TyvPNxg9RebXmEThDbLwSzuUO1N1_dS5LJ8MTGWRmiPzzyyOp7v3sESmGtwVM70PYcj-kgMZ3-H2zPTB1NMd0-yCK9wpdSS1djIDRa4o7xW7RzqExZmgGrF2sSweQ')
-    project_id = "al-bi-bq-prod"
-    final_date = date.today()
-    sql_query = f"""
-    select date as ds, sum(total_installs) as y from `al-bi-bq-prod.dwh.fact_daily_stats`
-    where _partitiondate between '2020-10-01' and '{final_date}'
-    group by 1
-    order by 1"""
-
-    df_init = pandas_gbq.read_gbq(sql_query, project_id=project_id)
-    '''
-
 
 
 
