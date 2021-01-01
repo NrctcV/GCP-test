@@ -1,2 +1,5 @@
 # GCP-test
-123
+Web application deployed on GCP
+*streamlit front-end
+*time-series prediction
+*docker
