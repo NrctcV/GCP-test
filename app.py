@@ -2,7 +2,7 @@
 Launch app with `streamlit run main.py --server.port 8000`.
 """
 
-import cloudstorage as gcs
+
 import google.oauth2.credentials
 import pandas_gbq
 from datetime import date
