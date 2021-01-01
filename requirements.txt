@@ -5,4 +5,4 @@ google==3.0.0
 streamlit==0.71.0
 plotly==4.14.0
 google-cloud-storage==1.24.1
-google-resumable-media<2.0dev,>=0.6.0
+google-resumable-media >=0.6.0
