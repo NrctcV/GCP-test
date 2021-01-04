@@ -35,7 +35,7 @@ def dataset(n):
     """
     '''
     credentials = google.oauth2.credentials.Credentials(
-        'a29.A0AfH6SMDgL2ePU-NjQI4XsY56JNkG4HmGCTyu4qS4375bo9TyvPNxg9RebXmEThDbLwSzuUO1N1_dS5LJ8MTGWRmiPzzyyOp7v3sESmGtwVM70PYcj-kgMZ3-H2zPTB1NMd0-yCK9wpdSS1djIDRa4o7xW7RzqExZmgGrF2sSweQ')
+        'xxxx')
     project_id = "al-bi-bq-prod"
     final_date = date.today()
     sql_query = f"""
